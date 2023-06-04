@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { CountryResponse } from '../interfaces/country-response.interface';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, delay, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,23 +12,25 @@ export class CountriesService {
   private http = inject(HttpClient);
   constructor() { }
 
+
+  private getCountriesRequest(url: string): Observable<CountryResponse[]>{
+    return this.http.get<CountryResponse[]>(url).pipe(
+      catchError(error => of([]))
+     )
+  }
+
   searchByCapital(capital: string): Observable<CountryResponse[]>{
-   return this.http.get<CountryResponse[]>(`${environment.PATH}capital/${capital}`)
-   .pipe(
-    catchError(error => of([]))
-   )
+    const url = `${environment.PATH}capital/${capital}`
+    return this.getCountriesRequest(url)
   }
   searchByCountries(name: string): Observable<CountryResponse[]>{
-   return this.http.get<CountryResponse[]>(`${environment.PATH}name/${name}`)
-   .pipe(
-    catchError(error => of([]))
-   )
+    const url = `${environment.PATH}name/${name}`
+    return this.getCountriesRequest(url)
   }
   searchByRegion(region: string): Observable<CountryResponse[]>{
-   return this.http.get<CountryResponse[]>(`${environment.PATH}region/${region}`)
-   .pipe(
-    catchError(error => of([]))
-   )
+    const url = `${environment.PATH}region/${region}`
+    return this.getCountriesRequest(url)
+
   }
   searchByCode(code: string): Observable<CountryResponse | null>{
    return this.http.get<CountryResponse[]>(`${environment.PATH}alpha/${code}`)

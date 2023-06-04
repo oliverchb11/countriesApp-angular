@@ -2,13 +2,14 @@
 <hr>
 <div class="row">
     <div class="col">
-        <shared-search-box placeholder="Buscar por Pais" (searchData)="searchData($event)"></shared-search-box>
+        <shared-search-box placeholder="Buscar por Pais" (searchData)="searchData($event)" (searchDataPress)="searchData($event)"></shared-search-box>
     </div>
 </div>
 
 <div class="row">
     <div class="col">
         <hr>
+        <shared-loading *ngIf="loading"></shared-loading>
         <countries-table [countries]="countries"></countries-table>
     </div>
 </div>

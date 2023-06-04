@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CountriesService } from '../../services/countries.service';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { CountryResponse } from '../../interfaces/country-response.interface';
 
 @Component({
@@ -10,18 +10,20 @@ import { CountryResponse } from '../../interfaces/country-response.interface';
   styles: [
   ]
 })
-export class CountryPageComponent implements OnInit{
+export class CountryPageComponent implements OnInit, OnDestroy{
 
   public country?: CountryResponse | null
   private activedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private countriesService = inject(CountriesService);
+  private subscription?: Subscription;    
+
   ngOnInit(): void {
       this.paramsRoute()
   }
 
   public paramsRoute(): void{
-    this.activedRoute.params.pipe(
+   this.subscription = this.activedRoute.params.pipe(
       switchMap(({id})=> this.countriesService.searchByCode(id))
     ).subscribe((country)=> {
       if(!country) return this.router.navigateByUrl('')
@@ -32,5 +34,7 @@ export class CountryPageComponent implements OnInit{
   }
 
 
-
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe()
+   }
 }
