@@ -1,0 +1,8 @@
+<h2>Países</h2>
+<hr>
+<ul class="list-group">
+    <li style="cursor: pointer;" *ngFor="let route of routes" class="list-group-item" [routerLink]="route.ruta" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        {{route.title}}
+    </li>
+
+</ul>
